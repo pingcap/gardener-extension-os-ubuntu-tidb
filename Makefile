@@ -13,8 +13,8 @@
 # limitations under the License.
 
 EXTENSION_PREFIX            := gardener-extension
-NAME                        := os-ubuntu
-REGISTRY                    := eu.gcr.io/gardener-project
+NAME                        := os-ubuntu-tikv
+REGISTRY                    := 385595570414.dkr.ecr.us-west-2.amazonaws.com/dbaas/gardener
 IMAGE_PREFIX                := $(REGISTRY)/extensions
 REPO_ROOT                   := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 HACK_DIR                    := $(REPO_ROOT)/hack

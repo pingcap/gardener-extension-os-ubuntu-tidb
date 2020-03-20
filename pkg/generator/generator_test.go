@@ -26,7 +26,7 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("Ubuntu OS Generator Test", func() {
+var _ = Describe("Ubuntu OS TiKV Generator Test", func() {
 
 	Describe("Conformance Tests", func() {
 		var box = packr.NewBox("./testfiles")

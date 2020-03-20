@@ -1,32 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gardener-extension-os-ubuntu
+  name: gardener-extension-os-ubuntu-tikv
   namespace: {{ .Release.Namespace }}
   labels:
-    app.kubernetes.io/name: gardener-extension-os-ubuntu
-    helm.sh/chart: gardener-extension-os-ubuntu
+    app.kubernetes.io/name: gardener-extension-os-ubuntu-tikv
+    helm.sh/chart: gardener-extension-os-ubuntu-tikv
     app.kubernetes.io/instance: {{ .Release.Name }}
 spec:
   revisionHistoryLimit: 0
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: gardener-extension-os-ubuntu
+      app.kubernetes.io/name: gardener-extension-os-ubuntu-tikv
       app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: gardener-extension-os-ubuntu
+        app.kubernetes.io/name: gardener-extension-os-ubuntu-tikv
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
-      serviceAccountName: gardener-extension-os-ubuntu
+      serviceAccountName: gardener-extension-os-ubuntu-tikv
       containers:
-      - name: gardener-extension-os-ubuntu
+      - name: gardener-extension-os-ubuntu-tikv
         image: {{ include "image" . }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         command:
-        - /gardener-extension-os-ubuntu
+        - /gardener-extension-os-ubuntu-tikv
         - --max-concurrent-reconciles={{ .Values.controllers.concurrentSyncs }}
         - --disable-controllers={{ .Values.disableControllers | join "," }}
         - --ignore-operation-annotation={{ .Values.controllers.ignoreOperationAnnotation }}

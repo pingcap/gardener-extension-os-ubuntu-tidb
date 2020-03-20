@@ -1,7 +1,7 @@
 image:
-  repository: eu.gcr.io/gardener-project/gardener/extensions/os-ubuntu
+  repository: 385595570414.dkr.ecr.us-west-2.amazonaws.com/dbaas/gardener/extensions/os-ubuntu-tikv
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 resources: {}
 

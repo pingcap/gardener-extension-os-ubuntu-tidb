@@ -12,26 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+//go:generate ../../vendor/github.com/gardener/gardener-extensions/hack/generate-controller-registration.sh os-ubuntu-tikv . ../../VERSION ../../example/controller-registration.yaml OperatingSystemConfig:ubuntu-tikv
 
-import (
-	"fmt"
-	"os"
-
-	"github.com/gardener/gardener-extension-os-ubuntu/cmd/gardener-extension-os-ubuntu/app"
-
-	extcontroller "github.com/gardener/gardener-extensions/pkg/controller"
-	"github.com/gardener/gardener-extensions/pkg/log"
-	runtimelog "sigs.k8s.io/controller-runtime/pkg/log"
-)
-
-func main() {
-	runtimelog.SetLogger(log.ZapLogger(false))
-
-	cmd := app.NewControllerCommand(extcontroller.SetupSignalHandlerContext())
-
-	if err := cmd.Execute(); err != nil {
-		fmt.Fprintf(os.Stderr, "error: %v\n", err)
-		os.Exit(1)
-	}
-}
+// Package chart enables go:generate support for generating the correct controller registration.
+package chart

@@ -1,6 +1,16 @@
 #cloud-config
 apt_update: true
 write_files:
+- path: '/etc/security/limits.d/99-tidb.conf'
+  permissions: '0644'
+  encoding: b64
+  content: |
+    cm9vdCAgICAgICAgc29mdCAgICAgICAgbm9maWxlICAgICAgICAxMDAwMDAwCnJvb3QgICAgICAgIGhhcmQgICAgICAgIG5vZmlsZSAgICAgICAgMTAwMDAwMApyb290ICAgICAgICBzb2Z0ICAgICAgICBjb3JlICAgICAgICAgIHVubGltaXRlZApyb290ICAgICAgICBzb2Z0ICAgICAgICBzdGFjayAgICAgICAgIDEwMjQw
+- path: '/var/local-volume-provisioner/mount-nvme.sh'
+  permissions: '0744'
+  encoding: b64
+  content: |
+    IyEvYmluL3NoCmZvciBpIGluIGBzZXEgMCAyNmA7IGRvCiAgaWYgWyAtZSAiL2Rldi9udm1lJHtpfSIgXTsgdGhlbiAjIGZpbmQgdGhlIGRldmljZQogICAgaWYgWyAtZSAiL2Rldi9udm1lJHtpfW4xIiBdOyB0aGVuCiAgICAgIGlmIGxzIC9kZXYvbnZtZSR7aX1uMXAqID4gL2Rldi9udWxsIDI+JjE7IHRoZW4KICAgICAgICBlY2hvICJkaXNrIC9kZXYvbnZtZSR7aX1uMSBhbHJlYWR5IHBhcnRlZCwgc2tpcHBpbmciCiAgICAgIGVsc2UKICAgICAgICBlY2hvICJkaXNrIC9kZXYvbnZtZSR7aX1uMSBpcyBub3QgcGFydGVkIgogICAgICAgIGlmICEgYmxraWQgL2Rldi9udm1lJHtpfW4xID4gL2Rldi9udWxsOyB0aGVuCiAgICAgICAgICBlY2hvICIvZGV2L252bWUke2l9bjEgbm90IGZvcm1hdHRlZCIKICAgICAgICAgIG1rZnMgLXQgZXh0NCAvZGV2L252bWUke2l9bjEKICAgICAgICAgIERJU0tfVVVJRD0kKGJsa2lkIC1zIFVVSUQgLW8gdmFsdWUgL2Rldi9udm1lJHtpfW4xKQogICAgICAgICAgbWtkaXIgLXAgL21udC9sb2NhbC1zc2QvJERJU0tfVVVJRAogICAgICAgICAgZWNobyBVVUlEPWBibGtpZCAtcyBVVUlEIC1vIHZhbHVlIC9kZXYvbnZtZSR7aX1uMWAgL21udC9sb2NhbC1zc2QvJERJU0tfVVVJRCBleHQ0IGRlZmF1bHRzIDAgMiB8IHRlZSAtYSAvZXRjL2ZzdGFiCiAgICAgICAgZmkKICAgICAgZmkKICAgIGZpCiAgZmkKZG9uZQ==
 - path: '/etc/systemd/system/containerd.service.d/11-exec_config.conf'
   permissions: '0644'
   encoding: b64
@@ -9,4 +19,9 @@ write_files:
 
 runcmd:
 - until apt-get update -qq && apt-get install --no-upgrade -qqy docker.io socat nfs-common logrotate jq policykit-1; do sleep 1; done
+- /bin/sh /var/local-volume-provisioner/mount-nvme.sh
+- mount -a
+- cp /lib/systemd/system/docker.service /etc/systemd/system/docker.service
+- sed -i 's/LimitNOFILE=infinity/LimitNOFILE=1048576/' /etc/systemd/system/docker.service
+- sed -i 's/LimitNPROC=infinity/LimitNPROC=1048576/' /etc/systemd/system/docker.service
 - systemctl daemon-reload
